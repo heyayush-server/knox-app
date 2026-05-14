@@ -33,7 +33,13 @@ jobs:
       - name: Flutter doctor
         run: flutter doctor -v
 
-      # 5. Install dependencies
+      # 5. Create local.properties (required by legacy Flutter Gradle plugin)
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
+          echo "flutter.sdk=$FLUTTER_ROOT" >> android/local.properties
+
+      # 6. Install dependencies
       - name: Install Flutter dependencies
         run: flutter pub get
 
