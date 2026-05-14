@@ -53,6 +53,11 @@
         android:theme="@style/NormalTheme"
         tools:targetApi="31">
 
+        <!-- Flutter v2 embedding — required for Flutter 3.x and local_auth -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
         <!-- ───────────────────────────────────────────────────────────────
              MAIN ACTIVITY
         ─────────────────────────────────────────────────────────────── -->
