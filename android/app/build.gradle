@@ -38,9 +38,10 @@ android {
 
     buildTypes {
         release {
-            // Enable R8 code shrinking for smaller, faster APK
-            minifyEnabled true
-            shrinkResources true
+            // R8 code shrinking — disable for CI builds to avoid ProGuard issues
+            // Re-enable once you've tested locally with: flutter build apk --release
+            minifyEnabled false
+            shrinkResources false
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -59,15 +60,9 @@ android {
         }
     }
 
-    // Split APKs by ABI for smaller download size on Samsung devices
-    splits {
-        abi {
-            enable true
-            reset()
-            include "arm64-v8a", "armeabi-v7a", "x86_64"
-            universalApk true
-        }
-    }
+    // NOTE: Do NOT enable ABI splits here — Flutter manages this via
+    // --split-per-abi and --target-platform CLI flags.
+    // Having splits.abi.enable=true conflicts with flutter build apk.
 
     // Optimize for Samsung Galaxy M56 (arm64-v8a)
     packagingOptions {
