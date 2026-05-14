@@ -3,25 +3,32 @@ name: Build Knox APK
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Check out your code
+      # ─────────────────────────────────────────────────────────────────
+      # 1. Checkout
+      # ─────────────────────────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Set up Java (required for Android/Gradle)
+      # ─────────────────────────────────────────────────────────────────
+      # 2. Java 17
+      # ─────────────────────────────────────────────────────────────────
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: gradle
 
-      # 3. Set up Flutter
+      # ─────────────────────────────────────────────────────────────────
+      # 3. Flutter 3.24.5
+      # ─────────────────────────────────────────────────────────────────
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -29,27 +36,53 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # 4. Verify Flutter installation
-      - name: Flutter doctor
-        run: flutter doctor -v
+      # ─────────────────────────────────────────────────────────────────
+      # 4. Download the real gradle-wrapper.jar (it is NOT committed)
+      # ─────────────────────────────────────────────────────────────────
+      - name: Download gradle-wrapper.jar
+        run: |
+          mkdir -p android/gradle/wrapper
+          curl -fsSL \
+            "https://raw.githubusercontent.com/gradle/gradle/v8.4.0/gradle/wrapper/gradle-wrapper.jar" \
+            -o android/gradle/wrapper/gradle-wrapper.jar
+          ls -lh android/gradle/wrapper/
 
-      # 5. Create local.properties (required by legacy Flutter Gradle plugin)
+      # ─────────────────────────────────────────────────────────────────
+      # 5. Make gradlew executable
+      # ─────────────────────────────────────────────────────────────────
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      # ─────────────────────────────────────────────────────────────────
+      # 6. Create local.properties (Flutter SDK + Android SDK paths)
+      # ─────────────────────────────────────────────────────────────────
       - name: Create local.properties
         run: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
           echo "flutter.sdk=$FLUTTER_ROOT" >> android/local.properties
+          cat android/local.properties
 
-      # 6. Install dependencies
-      - name: Install Flutter dependencies
+      # ─────────────────────────────────────────────────────────────────
+      # 7. Install Flutter dependencies
+      # ─────────────────────────────────────────────────────────────────
+      - name: Flutter pub get
         run: flutter pub get
 
-      # 6. Generate Hive adapters (build_runner)
-      - name: Generate code (Hive adapters)
+      # ─────────────────────────────────────────────────────────────────
+      # 8. Generate Hive adapters
+      # ─────────────────────────────────────────────────────────────────
+      - name: Generate code (build_runner)
         run: dart run build_runner build --delete-conflicting-outputs
 
-      # 7. Build release APK (universal — works on all devices)
+      # ─────────────────────────────────────────────────────────────────
+      # 9. Build release APK
+      # ─────────────────────────────────────────────────────────────────
       - name: Build release APK
         run: flutter build apk --release --verbose
+
+      # ─────────────────────────────────────────────────────────────────
+      # 10. Upload APK artifact (available for 30 days)
+      # ─────────────────────────────────────────────────────────────────
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
