@@ -25,7 +25,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.24.5'
           channel: 'stable'
           cache: true
 
@@ -43,7 +43,7 @@ jobs:
 
       # 7. Build release APK (universal — works on all devices)
       - name: Build release APK
-        run: flutter build apk --release
+        run: flutter build apk --release --verbose
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
