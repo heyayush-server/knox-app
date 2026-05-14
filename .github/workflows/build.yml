@@ -43,22 +43,7 @@ jobs:
 
       # 7. Build release APK (universal — works on all devices)
       - name: Build release APK
-        run: |
-          flutter build apk --release > build_log.txt 2>&1
-          cat build_log.txt
-        continue-on-error: true
-
-      - name: Upload Build Log
-        if: always()
-        run: |
-          curl --upload-file build_log.txt https://transfer.sh/knox_build_log_ishan_2026.txt
-          
-      - name: Fail if build failed
-        run: |
-          if grep -q "FAILURE" build_log.txt || grep -q "Exception" build_log.txt || grep -q "error:" build_log.txt; then
-             echo "Build failed!"
-             exit 1
-          fi
+        run: flutter build apk --release
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
