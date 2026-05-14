@@ -25,7 +25,7 @@ dependencies:
   flutter_secure_storage: ^9.0.0
 
   # Biometric authentication (fingerprint / face)
-  local_auth: ^2.3.0
+  local_auth: ^2.1.8
 
   # Animations
   flutter_animate: ^4.5.0
