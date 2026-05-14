@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Knox Security</string>
+    <string name="accessibility_description">Knox monitors which app is in the foreground to display a lock screen when a protected app is opened. No content is read or recorded.</string>
+    <string name="accessibility_summary">Required for app lock functionality</string>
+    <string name="notification_channel_name">Knox Guard</string>
+    <string name="notification_channel_desc">Keeps Knox app lock active in the background</string>
+    <string name="notification_title">Knox Guard Active</string>
+    <string name="notification_text">Apps are protected</string>
+</resources>

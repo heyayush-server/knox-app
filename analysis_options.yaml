@@ -1,0 +1,31 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # Style
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables
+    - prefer_final_fields
+    - prefer_final_locals
+    - avoid_unnecessary_containers
+    - sized_box_for_whitespace
+    - use_super_parameters
+
+    # Safety
+    - avoid_print
+    - cancel_subscriptions
+    - close_sinks
+    - unawaited_futures
+
+    # Performance
+    - avoid_slow_async_io
+
+analyzer:
+  errors:
+    # Treat unused imports as errors
+    unused_import: error
+    # Treat unused local variables as warnings
+    unused_local_variable: warning
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"

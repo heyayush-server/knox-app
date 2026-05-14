@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Knox Accessibility Service Configuration
+
+    This service monitors TYPE_WINDOW_STATE_CHANGED and TYPE_WINDOW_CONTENT_CHANGED
+    events to detect when a user opens a locked application.
+
+    Security reasoning:
+    - accessibilityEventTypes: Only TYPE_WINDOW_STATE_CHANGED is strictly needed
+      to detect foreground app changes. We do NOT request canRetrieveWindowContent
+      to minimize privacy impact.
+    - feedbackType: TYPE_GENERIC — no TTS/haptic/audio feedback from this service.
+    - notificationTimeout: 50ms for near-instant lock triggering at 120Hz.
+    - packageNames: Not restricted — Knox must monitor ALL packages.
+
+    Samsung OneUI compatibility note:
+    Samsung devices running OneUI may label this as "Knox App Guard" in
+    Settings > Accessibility > Downloaded apps. Users must manually enable it.
+    Samsung may also show a "Restricted" badge — this is expected behavior.
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagDefault"
+    android:canRetrieveWindowContent="false"
+    android:description="@string/accessibility_description"
+    android:notificationTimeout="50"
+    android:settingsActivity=".MainActivity"
+    android:summary="@string/accessibility_summary" />

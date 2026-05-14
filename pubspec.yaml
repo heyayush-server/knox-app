@@ -1,0 +1,46 @@
+name: knox_app_lock
+description: Knox High Security Layer - Premium Android App Lock
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: '>=3.22.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Navigation
+  go_router: ^14.2.0
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # Local storage (app list, settings)
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Secure PIN & biometric state storage (Android Keystore-backed AES-256)
+  flutter_secure_storage: ^9.0.0
+
+  # Biometric authentication (fingerprint / face)
+  local_auth: ^2.3.0
+
+  # Animations
+  flutter_animate: ^4.5.0
+
+  # PIN hashing (SHA-256 + salt)
+  crypto: ^3.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.11
+  hive_generator: ^2.0.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/

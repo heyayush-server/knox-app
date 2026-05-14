@@ -1,0 +1,104 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace "com.knox.applocker"
+
+    // Target Android 14 (API 34) — latest stable
+    compileSdk 34
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    defaultConfig {
+        applicationId "com.knox.applocker"
+        // Minimum SDK 26 (Android 8.0 Oreo) — required for:
+        //   - Adaptive icons
+        //   - Foreground services with notification channels
+        //   - Biometric API basics
+        minSdk 26
+        targetSdk 34
+
+        versionCode flutter.versionCode
+        versionName flutter.versionName
+
+        // Disable backup — Knox stores sensitive data that must not be backed up
+        android.allowBackup = false
+    }
+
+    buildTypes {
+        release {
+            // Enable R8 code shrinking for smaller, faster APK
+            minifyEnabled true
+            shrinkResources true
+
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+
+            // Sign with release key in production
+            // signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug // Use debug signing for now
+        }
+
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            applicationIdSuffix ".debug"
+        }
+    }
+
+    // Split APKs by ABI for smaller download size on Samsung devices
+    splits {
+        abi {
+            enable true
+            reset()
+            include "arm64-v8a", "armeabi-v7a", "x86_64"
+            universalApk true
+        }
+    }
+
+    // Optimize for Samsung Galaxy M56 (arm64-v8a)
+    packagingOptions {
+        resources {
+            excludes += [
+                "/META-INF/{AL2.0,LGPL2.1}",
+                "META-INF/DEPENDENCIES",
+            ]
+        }
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+flutter {
+    source "../.."
+}
+
+dependencies {
+    // AndroidX core
+    implementation "androidx.core:core-ktx:1.13.1"
+    implementation "androidx.appcompat:appcompat:1.7.0"
+
+    // Biometric
+    implementation "androidx.biometric:biometric:1.1.0"
+
+    // Security (EncryptedSharedPreferences for secure storage)
+    implementation "androidx.security:security-crypto:1.1.0-alpha06"
+
+    // Lifecycle (for service lifecycle awareness)
+    implementation "androidx.lifecycle:lifecycle-service:2.8.4"
+}
